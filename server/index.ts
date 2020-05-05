@@ -40,9 +40,9 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
-      domain: prod ? ".nodebird.com" : undefined,
+      domain: prod ? ".nodebird.com" : undefined
     },
-    name: "rnbok",
+    name: "rnbok"
   })
 );
 app.use(passport.initialize());
