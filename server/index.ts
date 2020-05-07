@@ -9,12 +9,22 @@ import * as hpp from "hpp";
 import * as helmet from "helmet";
 import * as passport from "passport";
 
+import { sequelize } from "./models";
+
 dotenv.config();
 const app = express();
 
 const prod: boolean = process.env.NODE_ENV === "production";
 
 app.set("port", prod ? process.env.PORT : 8080);
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("db ok");
+  })
+  .catch((err: Error) => {
+    console.log(err);
+  });
 
 if (prod) {
   app.use(hpp());
@@ -40,9 +50,9 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
-      domain: prod ? ".nodebird.com" : undefined
+      domain: prod ? ".nodebird.com" : undefined,
     },
-    name: "rnbok"
+    name: "rnbok",
   })
 );
 app.use(passport.initialize());
