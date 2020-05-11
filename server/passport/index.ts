@@ -1,6 +1,5 @@
 import * as passport from "passport";
 import User from "../models/user";
-import { AsyncLocalStorage } from "async_hooks";
 
 export default () => {
   // 로그인 시 한번 실행
