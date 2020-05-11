@@ -1,5 +1,6 @@
 import * as passport from "passport";
 import User from "../models/user";
+import local from "./local";
 
 export default () => {
   // 로그인 시 한번 실행
