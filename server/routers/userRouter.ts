@@ -91,3 +91,70 @@ router.post("/logout", isLoggedIn, (req, res) => {
     res.send(`Logout 됨.`);
   });
 });
+
+interface IUser extends User {
+  PostCount: number;
+  FollowingCount: number;
+  FollowerCount: number;
+}
+
+router.get("/:id", async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: { id: parseInt(req.params.id, 10) },
+      include: [
+        {
+          model: Post,
+          as: "Posts",
+          attributes: ["id"]
+        },
+        {
+          model: User,
+          as: "Followings",
+          attributes: ["id"]
+        },
+        {
+          model: User,
+          as: "Followers",
+          attributes: ["id"]
+        }
+      ],
+      attributes: ["id", "nickname"]
+    });
+    if (!user) {
+      return res.status(404).send(`no user`);
+    } else {
+      const jsonUser = user.toJson() as IUser;
+      jsonUser.PostCount = jsonUser.Posts ? jsonUser.Posts.length : 0;
+      jsonUser.FollowingCount = jsonUser.Followings
+        ? jsonUser.Followings.length
+        : 0;
+      jsonUser.FollowerCount = jsonUser.Followers
+        ? jsonUser.Followers.length
+        : 0;
+      return res.json(jsonUser);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get("/:id/followings", isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
+      }
+    });
+    if (!user) {
+      return res.status(404).send(`no user`);
+    } else {
+      const follower = await user.getFollowings({
+        attributes: ["id", "nickname"]
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+});
