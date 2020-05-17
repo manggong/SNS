@@ -8,7 +8,7 @@ const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const isNotLoggeIn = (req: Request, res: Response, next: NextFunction) => {
+const isNotLoggedIn = (req: Request, res: Response, next: NextFunction) => {
   if (!req.isAuthenticated()) {
     next();
   } else {
@@ -16,4 +16,4 @@ const isNotLoggeIn = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { isLoggedIn, isNotLoggeIn };
+export { isLoggedIn, isNotLoggedIn };
