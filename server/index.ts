@@ -9,6 +9,8 @@ import * as hpp from "hpp";
 import * as helmet from "helmet";
 import * as passport from "passport";
 
+import userRouter from "./routers/userRouter";
+import postRouter from "./routers/postRouter";
 import { sequelize } from "./models";
 
 dotenv.config();
@@ -50,13 +52,15 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
-      domain: prod ? ".nodebird.com" : undefined,
+      domain: prod ? ".nodebird.com" : undefined
     },
-    name: "rnbok",
+    name: "rnbok"
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/user", userRouter);
+app.use("/post", postRouter);
 
 app.get("/", (req, res) => {
   res.send("hello");
